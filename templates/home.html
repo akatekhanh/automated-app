@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+    <title>Automated Negotiation</title>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Automated Negotiation</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container my-5">
+        <div class="row flex-nowrap">
+            <div class="col-md-4 mr-3">
+                <h3 style="color: #009688;" class="text-center">Configurations</h3>
+                <!-- Content for first column goes here -->
+                <form class="row form-inline mt-3" id="agent-1">
+                    <div class="col-md-3">
+                        <label for="input2" class="mr-2"><b>Agent 1 steps</b></label>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="text" name="input1" class="form-control border border-success" style="width: 100%;">
+                    </div>
+                    <div class="col-md-6">
+                        <b class="text-info" id="agent-1-utility">
+                            _, _, _, _
+                        </b> <br>
+                        <!-- <b class="text-info">12.95, 13.7, 11.75, 85.0</b> -->
+                    </div>
+                </form>
+                <form class="row form-inline mt-3" id="agent-2">
+                    <div class="col-md-3">
+                        <label for="input2" class="mr-2"><b>Agent 2 steps</b></label>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="text" name="input2" class="form-control border border-success" style="width: 100%;">
+                    </div>
+                    <div class="col-md-6">
+                        <b class="text-info" id="agent-2-utility">
+                            _, _, _, _
+                        </b><br>
+                        <!-- <b class="text-info">12.95, 13.7, 11.75, 85.0</b> -->
+                    </div> 
+                </form>
+                <br>
+                <button class="btn btn-info" onclick="submitData()">Calculate</button>
+            </div>
+
+            <div class="col-md-8">
+                <h3 style="color: #009688;" class="text-center">Negotiation details</h3>
+                
+                <div class="row border border-danger py-3 my-3" id="rejected">
+                    <div class="col-md-12">
+                        <h4 style="color: #a40e22;" class="text-center">Offer Rejected</h4>
+                    </div>
+                    <!-- <div class="col-md-12 mx-1">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label for="input2"><b>Agent 1 <b class="text-light bg-dark">1st</b> Offer</b></label>
+                            </div>
+                            <div class="col-md-3">
+                                <b class="text-danger">12.11</b>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="input2"><b>Agent 2 <b class="text-light bg-dark">1st</b> Offer</b></label>
+                            </div>
+                            <div class="col-md-3">
+                                <b class="text-danger">12.11</b>
+                            </div>
+                        </div>
+                    </div> -->
+                </div>
+
+                <div class="row border border-success py-3" id="accepted">
+                    <div class="col-md-12">
+                        <h4 style="color: #0c915e;" class="text-center">Offer Accepted</h4>
+                    </div>
+                </div>
+
+                <div class="row py-3 my-3" id="accepted">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-8 border border-success rounded">
+                        <h4 style="color: #0c915e;" >        Winner : <b class="text-info" id="winner">___</b></h4>
+                        <h4 style="color: #0c915e;" >Accepted Offer : <b class="text-info" id="result">___</b></h4>
+                    </div>
+                    <div class="col-md-2"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
