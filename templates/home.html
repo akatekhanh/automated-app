@@ -32,11 +32,15 @@
                         <label for="input2" class="mr-2"><b>Agent 1 steps</b></label>
                     </div>
                     <div class="col-md-3">
-                        <input type="text" name="input1" class="form-control border border-success" style="width: 100%;">
+                        <input type="text" name="input1" value="{% if result %}{{ result.a1_steps }}{% else %}{% endif %}" class="form-control border border-success" style="width: 100%;">
                     </div>
                     <div class="col-md-6">
                         <b class="text-info" id="agent-1-utility">
+                            {% if result %}
+                                <p>A1 utility: {{result.a1_utility}}</p>
+                            {% else %}
                             _, _, _, _
+                            {% endif %}
                         </b> <br>
                         <!-- <b class="text-info">12.95, 13.7, 11.75, 85.0</b> -->
                     </div>
@@ -46,11 +50,15 @@
                         <label for="input2" class="mr-2"><b>Agent 2 steps</b></label>
                     </div>
                     <div class="col-md-3">
-                        <input type="text" name="input2" class="form-control border border-success" style="width: 100%;">
+                        <input type="text" name="input2" value="{% if result %}{{ result.a2_steps }}{% else %}{% endif %}" class="form-control border border-success" style="width: 100%;">
                     </div>
                     <div class="col-md-6">
                         <b class="text-info" id="agent-2-utility">
+                            {% if result %}
+                                <p>A2 utility: {{result.a2_utility}}</p>
+                            {% else %}
                             _, _, _, _
+                            {% endif %}
                         </b><br>
                         <!-- <b class="text-info">12.95, 13.7, 11.75, 85.0</b> -->
                     </div> 
@@ -66,37 +74,85 @@
                     <div class="col-md-12">
                         <h4 style="color: #a40e22;" class="text-center">Offer Rejected</h4>
                     </div>
-                    <!-- <div class="col-md-12 mx-1">
-                        <div class="row">
-                            <div class="col-md-3">
-                                <label for="input2"><b>Agent 1 <b class="text-light bg-dark">1st</b> Offer</b></label>
+                    <!-- {{result['data']}} -->
+                    {% if result %}
+                        {% for row in result['data'][:-1] %}
+                            <div class="col-md-12 mx-1">
+                                <div class="row">
+                                    <div class="col-md-1">
+                                        <label><b>{{ loop.index }}</b></label>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label for="input2"><b>Agent 1 Offer</b></label>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <b class="text-danger">{{ row[0] }}</b>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label for="input2"><b>Agent 2 Offer</b></label>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <b class="text-danger">{{ row[1] }}</b>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="col-md-3">
-                                <b class="text-danger">12.11</b>
-                            </div>
-                            <div class="col-md-3">
-                                <label for="input2"><b>Agent 2 <b class="text-light bg-dark">1st</b> Offer</b></label>
-                            </div>
-                            <div class="col-md-3">
-                                <b class="text-danger">12.11</b>
-                            </div>
-                        </div>
-                    </div> -->
+                        {% endfor %}
+                    {% endif %}
                 </div>
 
                 <div class="row border border-success py-3" id="accepted">
                     <div class="col-md-12">
                         <h4 style="color: #0c915e;" class="text-center">Offer Accepted</h4>
                     </div>
+                    <div class="col-md-12 mx-1">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label for="input2"><b>Agent 1 <b class="text-light bg-dark">final</b> Offer</b></label>
+                            </div>
+                            <div class="col-md-3">
+                                <b class="text-success">
+                                    {% if result %}
+                                        {{result['data'][-1][0]}}
+                                    {% else %}
+                                    ___
+                                    {% endif %}
+                                </b>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="input2"><b>Agent 2 <b class="text-light bg-dark">final</b> Offer</b></label>
+                            </div>
+                            <div class="col-md-3">
+                                <b class="text-success">
+                                    {% if result %}
+                                        {{result['data'][-1][1]}}
+                                    {% else %}
+                                    ___
+                                    {% endif %}
+                                </b>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="row py-3 my-3" id="accepted">
                     <div class="col-md-2"></div>
                     <div class="col-md-8 border border-success rounded">
-                        <h4 style="color: #0c915e;" >        Winner : <b class="text-info" id="winner">___</b></h4>
-                        <h4 style="color: #0c915e;" >Accepted Offer : <b class="text-info" id="result">___</b></h4>
+                        <h4 style="color: #0c915e;" >        Winner : <b class="text-info" id="winner">
+                            {% if result %}
+                                {{result.winner}}
+                            {% else %}
+                            ___
+                            {% endif %}
+                        </b></h4>
+                        <h4 style="color: #0c915e;" >Accepted Offer : <b class="text-info" id="result">
+                            {% if result %}
+                                {{result.result}}
+                            {% else %}
+                            ___
+                            {% endif %}
+                        </b></h4>
                     </div>
-                    <div class="col-md-2"></div>
+                    
                 </div>
             </div>
         </div>

@@ -1,3 +1,4 @@
+import ast
 import time
 import random
 from typing import Optional, Union
@@ -9,6 +10,8 @@ from sklearn.gaussian_process import GaussianProcessRegressor
 import matplotlib.pyplot as plt
 
 from negmas import Controller, MechanismState, ResponseType, SAOMechanism
+
+from db import insert_data, create_connection
 
 
 class RandomNegotiator(SAONegotiator):
@@ -277,9 +280,9 @@ def build_utility(outcomes, points):
 
 def process_data(a1_steps, a2_steps):
     # return {
-    #     "result": [2.95, 13.7, 11.75, 85.0], 
-    #     "a1offers": [(7, 6, 1, 9, 6), (7, 6, 1, 9, 6), (7, 6, 1, 9, 6), (7, 6, 1, 9, 6), (7, 6, 1, 9, 6), (7, 6, 1, 9, 6)], 
-    #     "a2offers": [(9, 7, 1, 9, 1), (9, 7, 1, 9, 1), (9, 7, 1, 9, 1), (9, 7, 1, 9, 1), (9, 7, 1, 9, 1), (9, 7, 1, 9, 1)], 
+    #     "result": str([7, 6, 1, 9, 6]), 
+    #     "a1offers": str([(7, 6, 1, 9, 6), (7, 6, 1, 9, 6), (7, 6, 1, 9, 6), (7, 6, 1, 9, 6), (7, 6, 1, 9, 6), (7, 6, 1, 9, 6)]), 
+    #     "a2offers": str([(9, 7, 1, 9, 1), (9, 7, 1, 9, 1), (9, 7, 1, 9, 1), (9, 7, 1, 9, 1), (9, 7, 1, 9, 1), (9, 7, 1, 9, 1)]), 
     #     "utility_a1": [2.95, 13.7, 11.75, 85.0], 
     #     "utility_a2": [2.95, 13.7, 11.75, 85.0]
     # }
@@ -325,13 +328,26 @@ def process_data(a1_steps, a2_steps):
     utility_a2 = a2.utility_function.mapping[neg.agreement] if neg.agreement else 0
     
     data = {
-        "result": [int(item) for item in result], 
-        "a1offers": [tuple(int(item) for item in tup) for tup in a1offers], 
-        "a2offers": [tuple(int(item) for item in tup) for tup in a2offers], 
-        "utility_a1": int(utility_a1), 
-        "utility_a2": int(utility_a2)
+        "result": str([int(item) for item in result]), 
+        "a1_offers": str([tuple(int(item) for item in tup) for tup in a1offers]), 
+        "a2_offers": str([tuple(int(item) for item in tup) for tup in a2offers]), 
+        "a1_utility": float(utility_a1), 
+        "a2_utility": float(utility_a2)
     }
-    data["winner"] = "Agent 1" if set(data['result']) in data['a1offers'] else "Agent 2"
+    data["winner"] = "Agent 1" if tuple(ast.literal_eval(data['result'])) in ast.literal_eval(data['a1_offers']) else "Agent 2"
+
+    conn = create_connection()
+    insert_data(
+        conn=conn,
+        a1_steps=a1_steps,
+        a2_steps=a2_steps,
+        a1_utility=data['a1_utility'],
+        a2_utility=data['a2_utility'],
+        a1_offers=data['a1_offers'],
+        a2_offers=data['a2_offers'],
+        result=data['result'],
+        winner=data['winner']
+    )
     return data
     
 # if __name__ == '__main__':

@@ -4,4 +4,19 @@ services:
   negotiation-app:
     build: .
     ports:
-      - 5000:5000
+      - "5000:8080"
+    command: gunicorn -w 1 -b :8080 --timeout 120 app:app
+    environment:
+      - REDIS=redis
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - negotiation-app
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"

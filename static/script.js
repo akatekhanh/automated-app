@@ -23,6 +23,8 @@ function submitData() {
       data: JSON.stringify(data),
       success: function(response) {
         console.log(response)
+        alert('Task is added!');
+        return true;
         $('b#agent-1-utility').text(response.utility_a1);
         $('b#agent-2-utility').text(response.utility_a2);
         var zipped = zip(response.a1offers, response.a2offers);
