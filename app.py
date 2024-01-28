@@ -9,7 +9,7 @@ from negotiation import process_data
 
 app = Flask(__name__)
 redis_connection = redis.Redis(host=os.getenv('REDIS'), port=6379)
-queue = Queue(connection=redis_connection)
+queue = Queue(connection=redis_connection, default_timeout=3600)
 
 
 # Create the SQLite table within the app context
@@ -51,7 +51,7 @@ def home():
 def process():
     data = request.json
     try:
-        queue.enqueue(process_data, int(data['agent_1']), int(data['agent_2']), timeout=3600)
+        queue.enqueue(process_data, int(data['agent_1']), int(data['agent_2']))
     except Exception as e:
         raise EnvironmentError(f"Error when processing the queue {e}")
     return jsonify({'status': True})
