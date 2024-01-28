@@ -51,7 +51,7 @@ def home():
 def process():
     data = request.json
     try:
-        queue.enqueue(process_data, int(data['agent_1']), int(data['agent_2']))
+        queue.enqueue(process_data, int(data['agent_1']), int(data['agent_2']), timeout=3600)
     except Exception as e:
         raise EnvironmentError(f"Error when processing the queue {e}")
     return jsonify({'status': True})
