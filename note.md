@@ -1,0 +1,3 @@
+- Explain Offer rejected and Offer accepted are the same
+- Combine 1,2,3 together
+- Export the chart

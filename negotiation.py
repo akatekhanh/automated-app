@@ -2,7 +2,6 @@ import ast
 import time
 import random
 from typing import Optional, Union
-from flask import jsonify
 import numpy as np
 import pandas as pd
 from negmas.sao.negotiators import SAONegotiator, NaiveTitForTatNegotiator
@@ -301,7 +300,7 @@ def process_data(a1_steps, a2_steps):
     # create the utility corresponding to the outcomes
     points = {}
     
-    size = 50
+    # size = 50
     keys = (np.random.randint(0, 10, (10, 5))).tolist()
     values = np.random.randint(0, 10, 10)
     points = {tuple(k): v for k, v in zip(keys, values)}
@@ -350,65 +349,66 @@ def process_data(a1_steps, a2_steps):
     )
     return data
     
-# if __name__ == '__main__':
-#     n_steps = 10
-#     # First, choose your agents. There are several in negmas.sao.negotiators. Check it out and test VS your own!a1 = NaiveTitForTatNegotiator()
-#     a1 = CustomNegotiator(n_steps)
-#     # a1 = NaiveTitForTatNegotiator()
-#     a2 = CustomNegotiator(n_steps)
-#     # Create the possible outcomes of the negotiation
-#     # outcomes = [(a, b, c, d, e) for a in range(10) for b in range(10) for c in range(10) for d in range(10) for e in range(10)]
-#     ranges = [np.arange(10)] * 5
-#     grids = np.meshgrid(*ranges, indexing='ij')
-#     outcomes = np.vstack(list(map(np.ravel, grids))).T
-#     outcomes = [tuple(row) for row in outcomes]
+if __name__ == '__main__':
+    n_steps = 10
+    # First, choose your agents. There are several in negmas.sao.negotiators. Check it out and test VS your own!a1 = NaiveTitForTatNegotiator()
+    a1 = CustomNegotiator(n_steps)
+    # a1 = NaiveTitForTatNegotiator()
+    a2 = CustomNegotiator(n_steps)
+    # Create the possible outcomes of the negotiation
+    # outcomes = [(a, b, c, d, e) for a in range(10) for b in range(10) for c in range(10) for d in range(10) for e in range(10)]
+    ranges = [np.arange(10)] * 5
+    grids = np.meshgrid(*ranges, indexing='ij')
+    outcomes = np.vstack(list(map(np.ravel, grids))).T
+    outcomes = [tuple(row) for row in outcomes]
 
-#     print("outcome OK")
-#     time_0 = time.time()
-#     # create the utility corresponding to the outcomes
-#     points = {}
+    print("outcome OK")
+    time_0 = time.time()
+    # create the utility corresponding to the outcomes
+    points = {}
     
-#     size = 50
-#     keys = (np.random.randint(0, 10, (10, 5))).tolist()
-#     values = np.random.randint(0, 10, 10)
-#     points = {tuple(k): v for k, v in zip(keys, values)}
-#     # for i in range(10):
-#     #     points[(int(random.random()*10), int(random.random()*10), int(random.random()*10),
-#     #             int(random.random()*10), int(random.random()*10))] = int(random.random() * 10)
-#     u1 = build_utility(outcomes, points)
-#     # for i in range(10):
-#     #     points[(int(random.random()*10), int(random.random()*10), int(random.random()*10),
-#     #             int(random.random()*10), int(random.random()*10))] = int(random.random() * 10)
+    size = 50
+    keys = (np.random.randint(0, 10, (10, 5))).tolist()
+    values = np.random.randint(0, 10, 10)
+    points = {tuple(k): v for k, v in zip(keys, values)}
+    # for i in range(10):
+    #     points[(int(random.random()*10), int(random.random()*10), int(random.random()*10),
+    #             int(random.random()*10), int(random.random()*10))] = int(random.random() * 10)
+    u1 = build_utility(outcomes, points)
+    # for i in range(10):
+    #     points[(int(random.random()*10), int(random.random()*10), int(random.random()*10),
+    #             int(random.random()*10), int(random.random()*10))] = int(random.random() * 10)
 
-#     size = 50
-#     keys = (np.random.randint(0, 10, (10, 5))).tolist()
-#     values = np.random.randint(0, 10, 10)
-#     points = {tuple(k): v for k, v in zip(keys, values)}
-#     u2 = build_utility(outcomes, points)
-#     print("utility OK")
-#     # The protocole, 100000 steps to find an agreement
-#     neg = SAOMechanism(outcomes=outcomes, n_steps=n_steps, outcome_type=tuple)
-#     # Allocate the preference profiles to the agents
-#     neg.add(a1, ufun=u1)
-#     neg.add(a2, ufun=u2)
-#     # And launch negotiation
-#     neg.run()
-#     # Print offers & utility
-#     a1offers = neg.negotiator_offers(a1.id)
-#     a2offers = neg.negotiator_offers(a2.id)
-#     print("\n=========================== Offers ===========================")
-#     print("Agent 1 ({}): ".format(a1.__class__.__name__) + str(a1offers))
-#     print("Agent 2 ({}): ".format(a2.__class__.__name__) + str(a2offers))
-#     print("\n=========================== Agreement ===========================")
-#     print(neg.agreement)
-#     print("\n=========================== Utilities ===========================")
-#     utility_a1 = a1.utility_function.mapping[neg.agreement] if neg.agreement else 0
-#     utility_a2 = a2.utility_function.mapping[neg.agreement] if neg.agreement else 0
-#     print("Utility of Agent 1 ({}): ".format(a1.__class__.__name__) + str(utility_a1))
-#     print("Utility of Agent 2 ({}): ".format(a2.__class__.__name__) + str(utility_a2))
-#     print(f"u1 {u1}")
-#     # print(len(u1))
-#     # u1 = u1.reshape(8,2,2)
-#     print(time.time() - time_0)
-#     # plt.imshow(u1[:,:,0])
-#     # plt.show()
+    size = 50
+    keys = (np.random.randint(0, 10, (10, 5))).tolist()
+    values = np.random.randint(0, 10, 10)
+    points = {tuple(k): v for k, v in zip(keys, values)}
+    u2 = build_utility(outcomes, points)
+    print("utility OK")
+    # The protocole, 100000 steps to find an agreement
+    neg = SAOMechanism(outcomes=outcomes, n_steps=n_steps, outcome_type=tuple)
+    # Allocate the preference profiles to the agents
+    print(f"==== {u1} {u2}")
+    neg.add(a1, ufun=u1)
+    neg.add(a2, ufun=u2)
+    # And launch negotiation
+    neg.run()
+    # Print offers & utility
+    a1offers = neg.negotiator_offers(a1.id)
+    a2offers = neg.negotiator_offers(a2.id)
+    print("\n=========================== Offers ===========================")
+    print("Agent 1 ({}): ".format(a1.__class__.__name__) + str(a1offers))
+    print("Agent 2 ({}): ".format(a2.__class__.__name__) + str(a2offers))
+    print("\n=========================== Agreement ===========================")
+    print(neg.agreement)
+    print("\n=========================== Utilities ===========================")
+    utility_a1 = a1.utility_function.mapping[neg.agreement] if neg.agreement else 0
+    utility_a2 = a2.utility_function.mapping[neg.agreement] if neg.agreement else 0
+    print("Utility of Agent 1 ({}): ".format(a1.__class__.__name__) + str(utility_a1))
+    print("Utility of Agent 2 ({}): ".format(a2.__class__.__name__) + str(utility_a2))
+    print(f"u1 {u1}")
+    # print(len(u1))
+    # u1 = u1.reshape(8,2,2)
+    print(time.time() - time_0)
+    # plt.imshow(u1[:,:,0])
+    # plt.show()

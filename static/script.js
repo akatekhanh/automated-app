@@ -24,7 +24,6 @@ function submitData() {
       success: function(response) {
         console.log(response)
         alert('Task is added!');
-        return true;
         $('b#agent-1-utility').text(response.utility_a1);
         $('b#agent-2-utility').text(response.utility_a2);
         var zipped = zip(response.a1offers, response.a2offers);
@@ -97,3 +96,30 @@ function submitData() {
       }
     });
   }
+
+
+function submitDataNewNegotiator(){
+  var data = {
+    'n_steps': $('#agent-1').find('input[name="input1"]').val()
+  };
+  
+  $.ajax({
+    url: '/process_new',
+    method: 'POST',
+    contentType: 'application/json',
+    data: JSON.stringify(data),
+    success: function(response) {
+      template = `
+      <img src="/static/images/${response.image}" alt="Result">
+      `
+      var html_template = new DOMParser().parseFromString(template, 'text/html');
+      var main = document.getElementById("main");
+      while(html_template.body.firstChild) {
+        main.appendChild(html_template.body.firstChild);
+      }
+    },
+    error: function(error) {
+      alert('Error sending data');
+    }
+  });
+}

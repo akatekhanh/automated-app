@@ -8,6 +8,8 @@ services:
     command: gunicorn -w 1 -b :8080 --timeout 120 app:app
     environment:
       - REDIS=redis
+    volumes:
+      - .:/python-docker
   nginx:
     image: nginx:latest
     ports:

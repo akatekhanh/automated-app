@@ -6,6 +6,7 @@ from rq import Queue, Worker
 from db import create_connection, create_table
 
 from negotiation import process_data
+from new_negotiation import process
 
 app = Flask(__name__)
 redis_connection = redis.Redis(host=os.getenv('REDIS'), port=6379)
@@ -48,7 +49,7 @@ def home():
 
 
 @app.route('/process', methods=['POST'])
-def process():
+def process_app():
     data = request.json
     try:
         queue.enqueue(process_data, int(data['agent_1']), int(data['agent_2']))
@@ -57,9 +58,20 @@ def process():
     return jsonify({'status': True})
 
 
-@app.route('/run', methods=['GET'])
+@app.route('/new', methods=['GET'])
 def run():
-    pass
+    processed_data = process(n_steps=20)
+    return render_template('new_negotiator.html', result=processed_data)
+
+
+@app.route('/process_new', methods=['POST'])
+def process_new():
+    data = request.json
+    try:
+       processed_data = process(int(data['n_steps'])) 
+    except Exception as e:
+        raise EnvironmentError(f"Error when processing the queue {e}")
+    return jsonify(processed_data)
 
 
 if __name__ == "__main__":
