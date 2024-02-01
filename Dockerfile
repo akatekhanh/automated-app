@@ -8,7 +8,7 @@ COPY requirements.txt requirements.txt
 
 RUN pip3 install -r requirements.txt
 
-RUN pip3 install --no-deps
+RUN pip3 install negmas --no-deps
 RUN apt-get update -y && apt-get install procps -y && apt-get install -y supervisor
 # COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
