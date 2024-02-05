@@ -20,7 +20,7 @@ with app.app_context():
     create_table(conn)
 
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/old', methods=['GET', 'POST'])
 def home():
     conn = create_connection()
     cursor = conn.cursor()
@@ -58,10 +58,9 @@ def process_app():
     return jsonify({'status': True})
 
 
-@app.route('/new', methods=['GET'])
+@app.route('/', methods=['GET'])
 def run():
-    processed_data = process(n_steps=20)
-    return render_template('new_negotiator.html', result=processed_data)
+    return render_template('new_negotiator.html', result=None)
 
 
 @app.route('/process_new', methods=['POST'])

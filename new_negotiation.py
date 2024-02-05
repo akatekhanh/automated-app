@@ -1,3 +1,4 @@
+import ast
 import uuid
 import warnings
 warnings.filterwarnings('ignore')
@@ -44,26 +45,35 @@ def process(n_steps):
         outcome_space=session.outcome_space,
     )
 
+    buyer = TimeBasedConcedingNegotiator(name="buyer")
+    seller = TimeBasedConcedingNegotiator(name="seller")
+
     # create and add buyer and seller negotiators
-    session.add(TimeBasedConcedingNegotiator(name="buyer"), preferences=buyer_utility)
-    session.add(TimeBasedConcedingNegotiator(name="seller"), ufun=seller_utility)
+    session.add(buyer, preferences=buyer_utility)
+    session.add(seller, ufun=seller_utility)
 
     # run the negotiation and show the results
     result = session.run()
 
+    buyer_offers = session.negotiator_offers(buyer.id)
+    seller_offers = session.negotiator_offers(seller.id)
+
     fig_name = str(uuid.uuid4()) + ".png"
 
-    session.plot(
-        show_reserved=False, 
-        save_fig=True,
-        fig_name=fig_name,
-        path="static/images"
-    )
+    session.plot(show_reserved=False, save_fig=True, fig_name=fig_name, path="static/images")
     
-    return {
-        "aggrement": result.agreement,
-        "resulf": result.results,
+    data = {
+        "result": result.agreement,
         "time": result.time,
-        "image": fig_name
+        "image": fig_name,
+        "a1_offers": str([tuple(int(item) for item in tup) for tup in buyer_offers]), 
+        "a2_offers": str([tuple(int(item) for item in tup) for tup in seller_offers]), 
+        "data": [item for item in zip(buyer_offers, seller_offers)],
+        # "a1_utility": float(utility_a1), 
+        # "a2_utility": float(utility_a2),
     }
-    
+    if not data['result'] or (data['result'] not in buyer_offers and data['result'] not in seller_offers):
+        data['winner'] = "No Winner"
+    else:
+        data["winner"] = "Agent 1" if data['result'] in buyer_offers else "Agent 2"
+    return data

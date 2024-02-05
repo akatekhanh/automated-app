@@ -109,14 +109,84 @@ function submitDataNewNegotiator(){
     contentType: 'application/json',
     data: JSON.stringify(data),
     success: function(response) {
+      console.log(response)
       template = `
       <img src="/static/images/${response.image}" alt="Result">
       `
       var html_template = new DOMParser().parseFromString(template, 'text/html');
       var main = document.getElementById("main");
-      while(html_template.body.firstChild) {
-        main.appendChild(html_template.body.firstChild);
+      if (main) {
+        // Replace the image
+        main.replaceWith(html_template.body.firstChild);
+      } else {
+        while(html_template.body.firstChild) {
+          main.appendChild(html_template.body.firstChild);
+        }
       }
+
+      // Rejected offers
+      for (let row of response.data.slice(0, -1)) {
+        var element = `
+            <div class="mx-1">
+                <div class="row">
+                    <div class="col-md-1">
+                        <label><b>${response.data.indexOf(row) + 1}</b></label>
+                    </div>
+                    <div class="col-md-2">
+                        <label for="input2"><b>Agent 1 Offer</b></label>
+                    </div>
+                    <div class="col-md-3">
+                        <b class="text-danger">${row[0]}</b>
+                    </div>
+                    <div class="col-md-2">
+                        <label for="input2"><b>Agent 2 Offer</b></label>
+                    </div>
+                    <div class="col-md-3">
+                        <b class="text-danger">${row[1]}</b>
+                    </div>
+                </div>
+            </div>
+        `;
+        document.getElementById('rejected').innerHTML += element;
+      }
+
+      // Accepted offers
+      var element = `
+            <div class="col-md-12 mx-1">
+                <div class="row">
+                    <div class="col-md-3">
+                        <label for="input2"><b>Agent 1 final Offer</b></label>
+                    </div>
+                    <div class="col-md-3">
+                        <b class="text-success">${response.data[response.data.length - 1][0]}</b>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="input2"><b>Agent 2 final Offer</b></label>
+                    </div>
+                    <div class="col-md-3">
+                        <b class="text-success">${response.data[response.data.length - 1][1]}</b>
+                    </div>
+                </div>
+            </div>
+        `;
+      document.getElementById('accepted').innerHTML += element;
+
+      // The Winner
+      var element = `
+          <div class="row py-3 my-3">
+              <div class="col-md-2"></div>
+              <div class="col-md-8 border border-success rounded">
+                  <h4 style="color: #0c915e;" >        Winner : <b class="text-info" id="winner">
+                      ${response.winner || '___'}
+                  </b></h4>
+                  <h4 style="color: #0c915e;" >Accepted Offer : <b class="text-info" id="result">
+                      ${response.result || '___'}
+                  </b></h4>
+              </div>
+          </div>
+      `;
+      document.getElementById('winner').innerHTML += element;
+
     },
     error: function(error) {
       alert('Error sending data');
