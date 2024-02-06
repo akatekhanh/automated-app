@@ -39,13 +39,13 @@ function submitData() {
                       <label><b>${i+1}</b></label>
                     </div>
                     <div class="col-md-2">
-                        <label for="input2"><b>Agent 1 <b class="text-light bg-dark"></b> Offer</b></label>
+                        <label for="input2"><b>Buyer <b class="text-light bg-dark"></b> Offer</b></label>
                     </div>
                     <div class="col-md-3">
                         <b class="text-danger">${zipped[i][0]}</b>
                     </div>
                     <div class="col-md-3">
-                        <label for="input2"><b>Agent 2 <b class="text-light bg-dark"></b> Offer</b></label>
+                        <label for="input2"><b>Seller <b class="text-light bg-dark"></b> Offer</b></label>
                     </div>
                     <div class="col-md-3">
                         <b class="text-danger">${zipped[i][1]}</b>
@@ -58,13 +58,13 @@ function submitData() {
               <div class="col-md-12 mx-1">
                 <div class="row">
                     <div class="col-md-3">
-                        <label for="input2"><b>Agent 1 <b class="text-light bg-dark">final</b> Offer</b></label>
+                        <label for="input2"><b>Buyer <b class="text-light bg-dark">final</b> Offer</b></label>
                     </div>
                     <div class="col-md-3">
                         <b class="text-success">${zipped[i][0]}</b>
                     </div>
                     <div class="col-md-3">
-                        <label for="input2"><b>Agent 2 <b class="text-light bg-dark">final</b> Offer</b></label>
+                        <label for="input2"><b>Seller <b class="text-light bg-dark">final</b> Offer</b></label>
                     </div>
                     <div class="col-md-3">
                         <b class="text-success">${zipped[i][1]}</b>
@@ -133,13 +133,13 @@ function submitDataNewNegotiator(){
                         <label><b>${response.data.indexOf(row) + 1}</b></label>
                     </div>
                     <div class="col-md-2">
-                        <label for="input2"><b>Agent 1 Offer</b></label>
+                        <label for="input2"><b>Buyer Offer</b></label>
                     </div>
                     <div class="col-md-3">
                         <b class="text-danger">${row[0]}</b>
                     </div>
                     <div class="col-md-2">
-                        <label for="input2"><b>Agent 2 Offer</b></label>
+                        <label for="input2"><b>Seller Offer</b></label>
                     </div>
                     <div class="col-md-3">
                         <b class="text-danger">${row[1]}</b>
@@ -151,37 +151,57 @@ function submitDataNewNegotiator(){
       }
 
       // Accepted offers
-      var element = `
-            <div class="col-md-12 mx-1">
-                <div class="row">
-                    <div class="col-md-3">
-                        <label for="input2"><b>Agent 1 final Offer</b></label>
-                    </div>
-                    <div class="col-md-3">
-                        <b class="text-success">${response.data[response.data.length - 1][0]}</b>
-                    </div>
-                    <div class="col-md-3">
-                        <label for="input2"><b>Agent 2 final Offer</b></label>
-                    </div>
-                    <div class="col-md-3">
-                        <b class="text-success">${response.data[response.data.length - 1][1]}</b>
-                    </div>
-                </div>
-            </div>
-        `;
-      document.getElementById('accepted').innerHTML += element;
+      // var element = `
+      //       <div class="col-md-12 mx-1">
+      //           <div class="row">
+      //               <div class="col-md-3">
+      //                   <label for="input2"><b>Buyer final Offer</b></label>
+      //               </div>
+      //               <div class="col-md-3">
+      //                   <b class="text-success">${response.data[response.data.length - 1][0]}</b>
+      //               </div>
+      //               <div class="col-md-3">
+      //                   <label for="input2"><b>Seller final Offer</b></label>
+      //               </div>
+      //               <div class="col-md-3">
+      //                   <b class="text-success">${response.data[response.data.length - 1][1]}</b>
+      //               </div>
+      //           </div>
+      //       </div>
+      //   `;
+      // document.getElementById('accepted').innerHTML += element;
 
       // The Winner
       var element = `
           <div class="row py-3 my-3">
               <div class="col-md-2"></div>
-              <div class="col-md-8 border border-success rounded">
-                  <h4 style="color: #0c915e;" >        Winner : <b class="text-info" id="winner">
+              <div class="col-md-8 border border-success rounded my-3">
+                  <h4 style="color: #0c915e;" >        Winner : <b class="text-dark" id="winner">
                       ${response.winner || '___'}
                   </b></h4>
-                  <h4 style="color: #0c915e;" >Accepted Offer : <b class="text-info" id="result">
+                  <h4 style="color: #0c915e;" >Accepted Offer : <b class="text-dark" id="result">
                       ${response.result || '___'}
                   </b></h4>
+                  <h4 style="color: #0c915e;" >Steps : <b class="text-dark" id="result">
+                      ${response.steps || '___'}
+                  </b></h4>
+                  <hr>
+                  <div class="col-md-12 mx-1">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label for="input2"><b>Buyer final Offer</b></label>
+                        </div>
+                        <div class="col-md-3">
+                            <b class="text-success">${response.data[response.data.length - 1][0]}</b>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="input2"><b>Seller final Offer</b></label>
+                        </div>
+                        <div class="col-md-3">
+                            <b class="text-success">${response.data[response.data.length - 1][1]}</b>
+                        </div>
+                    </div>
+                  </div>
               </div>
           </div>
       `;

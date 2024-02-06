@@ -34,7 +34,7 @@ def process(n_steps):
     seller_utility = LUFun(
         values=[IdentityFun(), LinearFun(0.2), AffineFun(-1, bias=9.0)],
         outcome_space=session.outcome_space,
-    )
+    ).scale_max(1.0)
 
     buyer_utility = LUFun(
         values={
@@ -43,13 +43,14 @@ def process(n_steps):
             "delivery_time": IdentityFun(),
         },
         outcome_space=session.outcome_space,
-    )
+    ).scale_max(1.0)
 
     buyer = TimeBasedConcedingNegotiator(name="buyer")
     seller = TimeBasedConcedingNegotiator(name="seller")
 
     # create and add buyer and seller negotiators
-    session.add(buyer, preferences=buyer_utility)
+    # session.add(buyer, preferences=buyer_utility)
+    session.add(buyer, ufun=buyer_utility)
     session.add(seller, ufun=seller_utility)
 
     # run the negotiation and show the results
@@ -61,19 +62,27 @@ def process(n_steps):
     fig_name = str(uuid.uuid4()) + ".png"
 
     session.plot(show_reserved=False, save_fig=True, fig_name=fig_name, path="static/images")
+
+    if len(buyer_offers) > len(seller_offers):
+        seller_offers.append("No more offers")
+    elif len(buyer_offers) < len(seller_offers):
+        buyer_offers.append("No more offers")
+    else:
+        pass
     
     data = {
         "result": result.agreement,
         "time": result.time,
         "image": fig_name,
-        "a1_offers": str([tuple(int(item) for item in tup) for tup in buyer_offers]), 
-        "a2_offers": str([tuple(int(item) for item in tup) for tup in seller_offers]), 
+        "a1_offers": buyer_offers, 
+        "a2_offers": seller_offers, 
         "data": [item for item in zip(buyer_offers, seller_offers)],
-        # "a1_utility": float(utility_a1), 
-        # "a2_utility": float(utility_a2),
+        "last_offer": [buyer_offers[-1], seller_offers[-1]],
+        "steps": result.step
     }
     if not data['result'] or (data['result'] not in buyer_offers and data['result'] not in seller_offers):
         data['winner'] = "No Winner"
     else:
-        data["winner"] = "Agent 1" if data['result'] in buyer_offers else "Agent 2"
+        data["winner"] = "Buyer" if data['result'] in buyer_offers else "Seller"
+    # import pdb; pdb.set_trace()
     return data
